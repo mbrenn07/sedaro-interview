@@ -1,56 +1,21 @@
-# Debian-based node base image
-FROM node:20-bookworm
+# start by pulling the python image
+FROM python:3.10
 
-# Add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+# copy the requirements file into the image
+COPY ./requirements.txt /app/requirements.txt
 
-# Create and set working directory
-RUN mkdir /app
+# switch working directory
 WORKDIR /app
 
-# Add app
-COPY ./app ./
+EXPOSE 5000
+ENV FLASK_APP=server.py
 
-# Install project dependencies
-RUN npm install
+# install the dependencies and packages in the requirements file
+RUN pip install -r requirements.txt
 
-# Installations for Python, needed for running sim
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  zlib1g-dev \
-  libncurses5-dev \
-  libgdbm-dev \
-  libnss3-dev \
-  libssl-dev \
-  libreadline-dev \
-  libffi-dev \
-  libsqlite3-dev \
-  wget \
-  libbz2-dev \
-  python3
+# copy every content from the local file to the image
+COPY . /app
 
-# Run the sim in order to output a data.json file.
-# IDEA: Rearchitect this so we can run the simulation many times with different initial conditions, without rebuilding
-RUN python3 sim.py
-
-# Start the Node app
-CMD ["npm", "start"]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# configure the container to run in an executed manner
+ENTRYPOINT [ "flask"]
+CMD [ "run", "--host", "0.0.0.0" ]

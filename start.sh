@@ -1,0 +1,1 @@
+(python -m flask --app server run) & (cd app || exit; npm start)

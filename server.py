@@ -3,6 +3,8 @@ import json
 from functools import reduce
 from operator import __or__
 from random import random
+from flask import Flask
+from flask_cors import CORS
 
 # MODELING & SIMULATION
 
@@ -10,6 +12,10 @@ init = {
     'Planet': {'time': 0, 'timeStep': 0.01, 'x': 0, 'y': 0.1, 'vx': 0.1, 'vy': 0},
     'Satellite': {'time': 0, 'timeStep': 0.01, 'x': 0, 'y': 1, 'vx': 1, 'vy': 0},
 }
+
+app = Flask(__name__)
+cors = CORS(app)
+
 
 def propagate(agentId, universe):
     """Propagate agentId from `time` to `time + timeStep`."""
@@ -33,6 +39,7 @@ def propagate(agentId, universe):
     return {'time': time + timeStep, 'timeStep': 0.01+random()*0.09, 'x': x, 'y': y, 'vx': vx, 'vy': vy}
 
 # DATA STRUCTURE
+
 
 class QRangeStore:
     """
@@ -64,39 +71,47 @@ class QRangeStore:
     Traceback (most recent call last):
     IndexError: Not found.
     """
+
     def __init__(self): self.store = []
-    def __setitem__(self, rng, value): 
+
+    def __setitem__(self, rng, value):
         (low, high) = rng
-        if not low < high: raise IndexError("Invalid Range.")
+        if not low < high:
+            raise IndexError("Invalid Range.")
         self.store.append((low, high, value))
+
     def __getitem__(self, key):
-        ret = [v for (l, h, v) in self.store if l <= key < h] 
-        if not ret: raise IndexError("Not found.")
+        ret = [v for (l, h, v) in self.store if l <= key < h]
+        if not ret:
+            raise IndexError("Not found.")
         return ret
-    
+
+
 doctest.testmod()
 
 # SIMULATOR
 
-def read(t):
-    try:
-        data = store[t]
-    except IndexError:
-        data = []
-    return reduce(__or__, data, {})
 
-store = QRangeStore()
-store[-999999999, 0] = init
-times = {agentId: state['time'] for agentId, state in init.items()}
+@app.route('/runSim')
+def runSim():
+    def read(t):
+        try:
+            data = store[t]
+        except IndexError:
+            data = []
+        return reduce(__or__, data, {})
 
-for _ in range(500):
-    for agentId in init:
-        t = times[agentId]
-        universe = read(t-0.001)
-        if set(universe) == set(init):
-            newState = propagate(agentId, universe)
-            store[t, newState['time']] = {agentId: newState}
-            times[agentId] = newState['time']
+    store = QRangeStore()
+    store[-999999999, 0] = init
+    times = {agentId: state['time'] for agentId, state in init.items()}
 
-with open('./public/data.json', 'w') as f:
-    f.write(json.dumps(store.store, indent=4))
+    for _ in range(500):
+        for agentId in init:
+            t = times[agentId]
+            universe = read(t-0.001)
+            if set(universe) == set(init):
+                newState = propagate(agentId, universe)
+                store[t, newState['time']] = {agentId: newState}
+                times[agentId] = newState['time']
+
+    return store.store

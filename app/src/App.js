@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
+import axios from "axios";
 
 const App = () => {
   // Store plot data in state.
@@ -8,31 +9,20 @@ const App = () => {
   useEffect(() => {
     // fetch plot data when the component mounts
 
-    async function fetchData() {
-      console.log('calling fetchdata...');
+    axios.get("http://127.0.0.1:5000/runSim").then((response) => {
+      const data = response.data
+      const updatedPlotData = {};
 
-      try {
-        // 'data.json' should be populated from a run of sim.py
-        const response = await fetch('data.json');
-        const data = await response.json();
-        const updatedPlotData = {};
+      data.forEach(([t0, t1, frame]) => {
+        for (let [agentId, { x, y }] of Object.entries(frame)) {
+          updatedPlotData[agentId] = updatedPlotData[agentId] || { x: [], y: [] };
+          updatedPlotData[agentId].x.push(x);
+          updatedPlotData[agentId].y.push(y);
+        }
+      });
 
-        data.forEach(([t0, t1, frame]) => {
-          for (let [agentId, { x, y }] of Object.entries(frame)) {
-            updatedPlotData[agentId] = updatedPlotData[agentId] || { x: [], y: [] };
-            updatedPlotData[agentId].x.push(x);
-            updatedPlotData[agentId].y.push(y);
-          }
-        });
-
-        setPlotData(Object.values(updatedPlotData));
-        console.log('plotData:', Object.values(updatedPlotData));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-
-    fetchData();
+      setPlotData(Object.values(updatedPlotData));
+    }).catch((e) => console.error('Error fetching data:', e))
   }, []);
 
   return (
