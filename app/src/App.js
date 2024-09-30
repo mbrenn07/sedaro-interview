@@ -15,11 +15,15 @@ const App = () => {
 
       data.forEach(([t0, t1, frame]) => {
         for (let [agentId, { x, y }] of Object.entries(frame)) {
-          updatedPlotData[agentId] = updatedPlotData[agentId] || { x: [], y: [] };
+          updatedPlotData[agentId] = updatedPlotData[agentId] ?? { x: [], y: [] };
           updatedPlotData[agentId].x.push(x);
           updatedPlotData[agentId].y.push(y);
         }
       });
+
+      Object.keys(updatedPlotData).forEach((key) => {
+        updatedPlotData[key].name = key
+      })
 
       setPlotData(Object.values(updatedPlotData));
     }).catch((e) => console.error('Error fetching data:', e))
@@ -31,7 +35,8 @@ const App = () => {
       data={plotData}
       layout={{
         title: 'Visualization',
-        yaxis: { scaleanchor: 'x' },
+        yaxis: { scaleanchor: 'x', title: 'Y Position' },
+        xaxis: { title: 'X Position' },
         autosize: true,
       }}
     />
