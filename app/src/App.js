@@ -9,7 +9,8 @@ const App = () => {
   useEffect(() => {
     // fetch plot data when the component mounts
 
-    axios.get("http://127.0.0.1:5000/runSim").then((response) => {
+    //idea: animate the travel of the two objects
+    axios.get("http://127.0.0.1:5000/runSim/1000").then((response) => {
       const data = response.data
       const updatedPlotData = {};
 
