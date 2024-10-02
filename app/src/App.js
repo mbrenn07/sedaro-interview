@@ -9,7 +9,7 @@ const App = () => {
   useEffect(() => {
     // fetch plot data when the component mounts
 
-    axios.get("http://127.0.0.1:5000/runSim").then((response) => {
+    axios.get("https://sedaro-frontend-1095352764453.us-east4.run.app/runSim").then((response) => {
       const data = response.data
       const updatedPlotData = {};
 
