@@ -92,8 +92,10 @@ doctest.testmod()
 # SIMULATOR
 
 
-@app.route('/runSim')
-def runSim():
+@app.route('/runSim/<numIterations>')
+def runSim(numIterations):
+    numIterations = int(numIterations)
+
     def read(t):
         try:
             data = store[t]
@@ -105,7 +107,7 @@ def runSim():
     store[-999999999, 0] = init
     times = {agentId: state['time'] for agentId, state in init.items()}
 
-    for _ in range(500):
+    for _ in range(numIterations):
         for agentId in init:
             t = times[agentId]
             universe = read(t-0.001)
