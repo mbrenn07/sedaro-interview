@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Plot from 'react-plotly.js';
+import Plot from './Plot';
 import axios from "axios";
 
 const App = () => {
@@ -30,16 +30,14 @@ const App = () => {
   }, []);
 
   return (
-    <Plot
-      style={{ position: 'fixed', width: '100%', height: '100%', left: 0, top: 0 }}
-      data={plotData}
-      layout={{
-        title: 'Visualization',
-        yaxis: { scaleanchor: 'x', title: 'Y Position' },
-        xaxis: { title: 'X Position' },
-        autosize: true,
-      }}
-    />
+    <>
+      {plotData.length > 0 && (
+        <Plot
+          data={plotData}
+        />
+      )}
+    </>
+
   );
 };
 
