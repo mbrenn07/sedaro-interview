@@ -1,4 +1,2 @@
-doctest
-json
 flask
 flask-cors
