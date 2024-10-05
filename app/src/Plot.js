@@ -33,13 +33,17 @@ export default function Plot(props) {
     setInterval(() => {
       props.data.forEach((object, index) => {
         setPartialData((oldVal) => {
-          oldVal[index].x.push(object.x[oldVal[index].x.length])
-          oldVal[index].y.push(object.y[oldVal[index].y.length])
+          if (object.x[oldVal[index].x.length] && object.y[oldVal[index].y.length]) {
+            oldVal[index].x.push(object.x[oldVal[index].x.length])
+            oldVal[index].y.push(object.y[oldVal[index].y.length])
 
-          return [...oldVal]
+            return [...oldVal]
+          } else {
+            return oldVal
+          }
         })
       })
-    }, 100)
+    }, 20)
   }, [])
 
   useEffect(() => {
