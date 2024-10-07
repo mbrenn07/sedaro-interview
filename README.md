@@ -1,52 +1,19 @@
-# Sedaro Nano
+# Project Writeup
 
-The tiniest possible mockup of our system
+## Standardization
 
-## Goal
+For my initial work on this project I brought it in line with other personal projects I've worked on, turning the Python backend into a Flask server and adding Dockerfiles I use for CI/CD with Google Cloud (GCP). I then used GCP to set up Github actions that build and host an image whenever I push to main, and used their DNS services to set up a custom subdomain under one I already owned. 
 
-The goal of this mini-project is to gain a better understanding of your ability to **be creative**, **think through problems**, and **solve relevant challenges** related to the engineering roles at Sedaro. This is an opportunity for you to show off your personal strengths. Don't focus on the simple contributions and instead aim to really impress us. To best set expectations, we won't be impressed by an ability to write boilerplate or copy and paste tutorials.  A submission that makes us say "Wow, that's SMART!" is far better than one that makes us say "This is really robust.". Get creative, the prompt is intentionally very open-ended.
+I performed the initial changes with the Flask server because I wanted a much more robust system that I could change later in the process, so converting the project to a standard backend and frontend with communication was extremely helpful. Since I wasn't building for robustness, a development Flask server works well enough for my purposes. If I had more time, I would set up the build process to host a production ready server instead.
 
-Within the next `7` days, attempt the following mini-project and return your solution containing the full project (less anything that would be .gitignored such as `node_modules`) and any notes on how to setup and run your specific solution. As important as your solution, we are interested in understanding your thought process and your ability to clearly communicate your approach so a writeup should also be included. For the writeup, include some details on your solution, any novel or creative aspects of the solution, and what additional features or improvements you would add if you were given more time.
+## Investigation
 
-Please note that if you end up getting to a solution that you aren't happy with or that is a dead end, document why and we will call that good enough. Please don't invest too much time. A writeup of why a solution is insufficient and how you might approach it differently often tells us what we need to know.
+After this, I wanted to get a better idea of what kind of data the simulator was actually generating and displaying so I could provide labels for the user. Once I realized it displayed the paths of a planet and a satellite I labeled the plot accordingly. I also added a parameter for the number of iterations to generate to the simulator's endpoint at this stage.
 
-If you have any questions or issues while you work through this problem or if you get stuck, please contact Bas Welsh at sebastian.welsh@sedarotech.com.
+I wanted to understand the system so I could understand what kind of changes would benefit it, and these smaller labeling changes helped me to build an understanding of the simulator. I chose not to change the simulator's core functionality during this process as I am not a SME, instead I wanted to focus on the frontend and human-computer interaction components of the overall design. If I had more time, I would have made the simulator more robust so that it could iterate on a previously run simulation when needed, allowing me to have much more data on the frontend without significant lag times
 
-Once you have completed your solution, please email to kacie.neurohr@sedarotech.com and sebastian.welsh@sedarotech.com
+## Visualization
 
-## Setup
+Once I understood the visualization, I decided I wanted to make it as clear as possible to users. Since the simulation tracks x and y coordinates over time, I knew I wanted to create an animation that demonstrated their travel through space over time. Plotly would be insufficent for this task, so I recreated the visualization in D3. I then added icons to make it clear what each line on the plot represented, and implemented some logic to animate everything. Finally, I added an appropriate background.
 
-1. Clone this repository.
-   - Please note that **only** cloning via HTTPS is supported
-   - Please **do not** commit changes to any branch of this repository. If you would like to use git, you may fork this repository to create a private repo of your own
-2. To compile and run the app, execute the following command
-   - ```docker compose up app```
-4. That's it ✅! Sedaro Nano should now be available via web browser at http://localhost:3000/. It may take a few moments for the container to fully come up and serve the page. Changes to the react app should auto reload the webpage.
-
-## Your Task
-
-**Review the few files that make up Sedaro Nano, figure out how it works, and then add to it in whatever way <u>best</u> shows off your unique skills + creativity!**
-
-### Some Project Ideas
-
-- Simulator:
-  - Improve the Q-Range KV Store data structure
-  - Make the system more generic/extensible
-  - Make it fast
-- Front End:
-  - Add cool visualizations and interactivity
-  - Improve efficiency/caching
-- Data:
-  - Utilize a better persistence layer than a js file
-  - Do some statistical analysis on the data
-  - Set up background jobs to preprocess data
-- Modeling & Simulation:
-  - Improve the numerical stability of the simulation functions
-  - Implement additional modeling and simulation scope
-  - Analyze the sensitivity to initial conditions
-- Etc:
-  - Port to a language of your choice
-  - Set up testing
-- Whatever you want; these are just suggestions to get you thinking
-
-![](./screenshot.png)
+My goal for the final product was a coherent and instantly understandable user experience. I wanted users to understand what was being visualized the moment they saw the visualization, without any real need for axes or labels, although those are included. The starry background, icons, and animation work together to set the stage, actors, and performance respectively. There are certainly some usability sacrifices here, as d3 has less features by default than Plotly, but I believe that this visualization can be understood by anyone who sees it the first time they do without any need for text. If I had more time, I would have reimplemented features like zooming, scrolling, and specific point viewing in d3. 
