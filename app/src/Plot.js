@@ -9,7 +9,7 @@ export default function Plot(props) {
   const ref = useRef();
 
   const width = 1700;
-  const height = 860;
+  const height = 760;
 
   const [partialData, setPartialData] = useState([])
 
