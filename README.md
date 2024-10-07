@@ -1,5 +1,7 @@
 # Project Writeup
 
+(live site found at https://sedaro.mbrenn.net/)
+
 ## Standardization
 
 For my initial work on this project I brought it in line with other personal projects I've worked on, turning the Python backend into a Flask server and adding Dockerfiles I use for CI/CD with Google Cloud (GCP). I then used GCP to set up Github actions that build and host an image whenever I push to main, and used their DNS services to set up a custom subdomain under one I already owned. 
